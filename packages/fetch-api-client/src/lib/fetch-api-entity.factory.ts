@@ -44,11 +44,12 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
   };
 
   private applyResponseMiddleware = (
-    res: FetchApiClientResponse<any>,
-    mw: IMiddleware<FetchApiClientResponse<any>>
-  ): FetchApiClientResponse<any> | Promise<FetchApiClientResponse<any>> => {
+    res: FetchApiClientResponse<unknown>,
+    mw: IMiddleware<FetchApiClientResponse<unknown>>
+  ):
+    | FetchApiClientResponse<unknown>
+    | Promise<FetchApiClientResponse<unknown>> => {
     if (
-      // Range of success statuses
       res.status >= HttpStatusCode.Ok &&
       res.status < HttpStatusCode.MultipleChoices
     ) {
@@ -57,17 +58,15 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
     return mw.onRejected ? mw.onRejected(res) : res;
   };
 
-  private applyResponseMiddlewares = (
-    response: FetchApiClientResponse<any>
-  ): Promise<FetchApiClientResponse<any>> => {
+  private applyResponseMiddlewares = <T>(
+    response: FetchApiClientResponse<T>
+  ): Promise<FetchApiClientResponse<T>> => {
     const responds = this.middlewares?.respond ?? [];
-    return responds.reduce<Promise<FetchApiClientResponse<any>>>(
+    return responds.reduce<Promise<FetchApiClientResponse<unknown>>>(
       (resPromise, mw) =>
-        resPromise.then(res => {
-          return this.applyResponseMiddleware(res, mw);
-        }),
+        resPromise.then(res => this.applyResponseMiddleware(res, mw)),
       Promise.resolve(response)
-    );
+    ) as Promise<FetchApiClientResponse<T>>;
   };
 
   private getHttpResponse = <T>(
@@ -92,7 +91,7 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
 
   private mapError = (
     error: Error,
-    details: { status: string | number; data: any; url: string }
+    details: { status: string | number; data: unknown; url: string }
   ) => {
     const { status, data, url } = details;
     return new FetchApiError(status, error.message, data, url);
@@ -131,7 +130,11 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
       const response = await this.client(processedRequest.url, processedInit);
 
       const data = (await this.safeJson<T>(response)) as T;
-      const httpResponse = this.getHttpResponse(data, response, processedInit);
+      const httpResponse = this.getHttpResponse<T>(
+        data,
+        response,
+        processedInit
+      );
 
       // Always run response middlewares (onFulfilled for 2xx, onRejected for non-2xx)
       const processedResponse =
@@ -161,7 +164,7 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
 
   public post = async <T>(
     url: string,
-    data?: any,
+    data?: unknown,
     config?: FetchApiClientEntityConfig
   ) => {
     return this.request<T>(url, {
@@ -173,7 +176,7 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
 
   public put = async <T>(
     url: string,
-    data?: any,
+    data?: unknown,
     config?: FetchApiClientEntityConfig
   ) => {
     return this.request<T>(url, {
@@ -185,7 +188,7 @@ export class FetchApiEntityFactory implements IFetchApiClientEntity {
 
   public patch = async <T>(
     url: string,
-    data?: any,
+    data?: unknown,
     config?: FetchApiClientEntityConfig
   ) => {
     return this.request<T>(url, {

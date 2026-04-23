@@ -4,8 +4,8 @@ describe("FetchApiError", () => {
   describe("getErrorDetails", () => {
     it("returns undefined when details is falsy", () => {
       expect(FetchApiError.getErrorDetails(undefined)).toBeUndefined();
-      expect(FetchApiError.getErrorDetails(null as any)).toBeUndefined();
-      expect(FetchApiError.getErrorDetails("" as any)).toBeUndefined();
+      expect(FetchApiError.getErrorDetails(null)).toBeUndefined();
+      expect(FetchApiError.getErrorDetails("")).toBeUndefined();
     });
 
     it("returns joined values when details is a plain object", () => {
@@ -26,8 +26,8 @@ describe("FetchApiError", () => {
     });
 
     it("returns stringified value when details is a primitive", () => {
-      expect(FetchApiError.getErrorDetails(123 as any)).toBe("123");
-      expect(FetchApiError.getErrorDetails(true as any)).toBe("true");
+      expect(FetchApiError.getErrorDetails(123)).toBe("123");
+      expect(FetchApiError.getErrorDetails(true)).toBe("true");
     });
   });
 });

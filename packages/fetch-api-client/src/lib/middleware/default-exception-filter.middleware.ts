@@ -5,7 +5,7 @@ import { FetchApiClientResponse } from "../fetch-api-helper.types";
 import { IMiddleware } from "./middleware.inteface";
 
 export class DefaultExceptionFilterMiddleware implements IMiddleware<
-  FetchApiClientResponse<any>
+  FetchApiClientResponse<unknown>
 > {
   constructor(
     private traceId?: string,
@@ -14,7 +14,7 @@ export class DefaultExceptionFilterMiddleware implements IMiddleware<
     this.logger.info("DefaultExceptionFilterMiddleware initialized.");
   }
 
-  public onRejected = (res: FetchApiClientResponse<any>) => {
+  public onRejected = (res: FetchApiClientResponse<unknown>) => {
     const status = Number(res.status);
     const message = res.statusText;
     const data = res.data;

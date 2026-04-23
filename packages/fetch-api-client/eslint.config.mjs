@@ -21,6 +21,6 @@ export default [
     }
   },
   {
-    ignores: ["**/out-tsc"]
+    ignores: ["**/out-tsc", "**/*.json"]
   }
 ];

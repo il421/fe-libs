@@ -8,7 +8,7 @@ export class AuthorizationMiddleware implements IMiddleware<FetchApiClientReques
     private getAccessToken?: () => Promise<string | undefined>,
     private noAuthHeader?: string,
     private readonly logger: ILogger = new Logger(),
-    private readonly tokenSchema: string = "Bearer"
+    private readonly tokenSchema = "Bearer"
   ) {
     this.logger.info("AuthorizationMiddleware initialized.");
   }
@@ -19,6 +19,7 @@ export class AuthorizationMiddleware implements IMiddleware<FetchApiClientReques
     const headers = (config.headers ?? {}) as Record<string, string>;
 
     if (this.noAuthHeader && this.noAuthHeader in headers) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [this.noAuthHeader]: _, ...rest } = headers;
       return { ...config, headers: rest };
     }

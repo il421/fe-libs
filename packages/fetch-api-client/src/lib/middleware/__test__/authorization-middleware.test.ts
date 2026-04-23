@@ -14,7 +14,7 @@ describe("AuthorizationMiddleware", () => {
       NO_AUTH_HEADER
     );
 
-    const result = await authMiddleware.onFulfilled!({
+    const result = await authMiddleware.onFulfilled?.({
       url: TEST_URL,
       headers: { [NO_AUTH_HEADER]: "some-value" }
     });
@@ -25,7 +25,7 @@ describe("AuthorizationMiddleware", () => {
   test("should add Authorization header with bearer token", async () => {
     const authMiddleware = new AuthorizationMiddleware(getAccessToken);
 
-    const result = await authMiddleware.onFulfilled!({
+    const result = await authMiddleware.onFulfilled?.({
       url: TEST_URL,
       headers: {}
     });
@@ -36,7 +36,7 @@ describe("AuthorizationMiddleware", () => {
   test("should preserve existing headers when adding Authorization", async () => {
     const authMiddleware = new AuthorizationMiddleware(getAccessToken);
 
-    const result = await authMiddleware.onFulfilled!({
+    const result = await authMiddleware.onFulfilled?.({
       url: TEST_URL,
       headers: { "X-Custom": "value" }
     });
@@ -57,7 +57,7 @@ describe("AuthorizationMiddleware", () => {
       headers: { "X-Custom": "value" }
     };
 
-    const result = await authMiddleware.onFulfilled!(input);
+    const result = await authMiddleware.onFulfilled?.(input);
 
     expect(result).toBe(input);
   });
@@ -66,7 +66,7 @@ describe("AuthorizationMiddleware", () => {
     const authMiddleware = new AuthorizationMiddleware();
 
     const input: FetchApiClientRequest = { url: TEST_URL, headers: {} };
-    const result = await authMiddleware.onFulfilled!(input);
+    const result = await authMiddleware.onFulfilled?.(input);
 
     expect(result).toBe(input);
   });
@@ -74,7 +74,7 @@ describe("AuthorizationMiddleware", () => {
   test("should preserve non-header config properties", async () => {
     const authMiddleware = new AuthorizationMiddleware(getAccessToken);
 
-    const result = await authMiddleware.onFulfilled!({
+    const result = await authMiddleware.onFulfilled?.({
       url: TEST_URL,
       headers: {},
       method: "POST"

@@ -1,13 +1,13 @@
 export class FetchApiError<Details = unknown> extends Error {
   public httpStatusCode?: number | string;
-  public detail?: Details | string;
+  public details?: Details | string;
   public url?: string;
   public traceId?: string;
 
   constructor(
     httpStatusCode: number | string,
     message: string,
-    detail?: Details | string,
+    details?: Details | string,
     url?: string,
     traceId?: string
   ) {
@@ -16,11 +16,11 @@ export class FetchApiError<Details = unknown> extends Error {
     this.httpStatusCode = httpStatusCode;
     this.message = message;
     this.traceId = traceId;
-    this.detail = FetchApiError.getErrorDetails(detail);
+    this.details = FetchApiError.getErrorDetails(details);
     this.url = url;
   }
 
-  static isFetchApError = (error: any): error is FetchApiError => {
+  static isFetchApError = (error: unknown): error is FetchApiError => {
     return error instanceof FetchApiError;
   };
 
@@ -29,7 +29,7 @@ export class FetchApiError<Details = unknown> extends Error {
 
     if (typeof details === "object" && !(details instanceof Date)) {
       const messages = Object.keys(details).map(
-        fieldName => (details as Record<string, any>)[fieldName]
+        fieldName => (details as Record<string, string>)[fieldName]
       );
       return messages.join("/n");
     }

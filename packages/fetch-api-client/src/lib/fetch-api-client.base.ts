@@ -24,7 +24,7 @@ export class FetchApiClientBase<ApiSchema = IApi> {
 
   private readonly commonRequestMiddlewares: IMiddleware<FetchApiClientRequest>[];
   private readonly commonResponseMiddlewares: IMiddleware<
-    FetchApiClientResponse<any>
+    FetchApiClientResponse<unknown>
   >[];
 
   public initialize = (): ApiSchema => {

@@ -122,7 +122,7 @@ describe("Fetch Api Client Base", () => {
     });
 
     test("should pass common response middlewares to each endpoint instance", () => {
-      const responseMiddleware: IMiddleware<FetchApiClientResponse<any>> = {
+      const responseMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {
         onRejected: error => error
       };
 
@@ -202,13 +202,14 @@ describe("Fetch Api Client Base", () => {
     });
 
     test("should merge common and override response middlewares for an endpoint", () => {
-      const commonResponseMiddleware: IMiddleware<FetchApiClientResponse<any>> =
-        {
-          onRejected: error => error
-        };
+      const commonResponseMiddleware: IMiddleware<
+        FetchApiClientResponse<unknown>
+      > = {
+        onRejected: error => error
+      };
 
       const overrideResponseMiddleware: IMiddleware<
-        FetchApiClientResponse<any>
+        FetchApiClientResponse<unknown>
       > = {
         onFulfilled: res => res
       };
