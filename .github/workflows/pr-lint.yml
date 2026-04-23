@@ -1,0 +1,40 @@
+name: PR Lint
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for Nx affected commands
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'  # or 'yarn' / 'pnpm'
+
+      - name: Install dependencies
+        run: npm ci  # or yarn install --frozen-lockfile
+
+      - name: Set Nx SHAs
+        uses: nrwl/nx-set-shas@v4
+        # Sets NX_BASE and NX_HEAD so `nx affected` only lints changed packages
+
+      - name: Run ESLint (affected only)
+        run: npx nx affected --target=lint --parallel=3
+
+      - name: Run TypeScript check (affected only)
+        run: npx nx affected --target=typecheck --parallel=3
+        # Remove if you don't have a typecheck target
+
+      - name: Run tests (affected only)
+        run: npx nx affected --target=test --parallel=3
+        # Remove or keep depending on your needs
