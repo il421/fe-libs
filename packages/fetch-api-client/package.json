@@ -28,5 +28,6 @@
   "scripts": {
     "fetch-api-client:build": "nx run @front-end-solutions/fetch-api-client:build",
     "fetch-api-client:publish": "nx run @front-end-solutions/fetch-api-client:nx-release-publish"
-  }
+  },
+  "dependencies": {}
 }

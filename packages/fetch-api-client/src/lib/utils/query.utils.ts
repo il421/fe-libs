@@ -2,7 +2,7 @@
  * Builds a query string from a given object.
  * @param params
  */
-export const buildQueryString = (params?: Record<string, any>): string => {
+export const buildQueryString = (params?: Record<string, unknown>): string => {
   if (!params) return "";
 
   const searchParams = new URLSearchParams();

@@ -3,22 +3,22 @@ import { ILogger } from "./logger";
 import { IMiddleware } from "./middleware";
 
 export type FetchApiClientEntityConfig = Omit<RequestInit, "method" | "body">;
-export type WithParams<T> = T & { params?: Record<string, any> };
+export type WithParams<T> = T & { params?: Record<string, unknown> };
 
 export interface IFetchApiClientEntity {
   post: <T>(
     url: string,
-    data?: any,
+    data?: T,
     config?: FetchApiClientEntityConfig
   ) => Promise<FetchApiClientResponse<T>>;
   put: <T>(
     url: string,
-    data?: any,
+    data?: T,
     config?: FetchApiClientEntityConfig
   ) => Promise<FetchApiClientResponse<T>>;
   patch: <T>(
     url: string,
-    data?: any,
+    data?: T,
     config?: FetchApiClientEntityConfig
   ) => Promise<FetchApiClientResponse<T>>;
   delete: <T>(
@@ -46,7 +46,7 @@ export type FetchApiEndpointsConfig<K = unknown> = {
 
 export interface FetchApiClientHelperMiddlewares {
   request?: IMiddleware<FetchApiClientRequest>[];
-  respond?: IMiddleware<FetchApiClientResponse<any>>[];
+  respond?: IMiddleware<FetchApiClientResponse<unknown>>[];
 }
 
 export interface FetchApiClientHelperOptions {

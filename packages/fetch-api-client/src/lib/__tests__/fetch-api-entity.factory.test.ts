@@ -361,7 +361,7 @@ describe("Fetch Api Entity Factory", () => {
         await factory.get("/users");
       } catch (error) {
         expect(error).toBeInstanceOf(FetchApiError);
-        expect((error as FetchApiError).detail).toBeDefined();
+        expect((error as FetchApiError).details).toBeDefined();
       }
     });
 
@@ -514,7 +514,7 @@ describe("Fetch Api Entity Factory", () => {
 
   describe("response middlewares", () => {
     test("should apply onFulfilled for successful responses", async () => {
-      const responseMiddleware: IMiddleware<FetchApiClientResponse<any>> = {
+      const responseMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: vi.fn(res => res)
       };
 
@@ -529,7 +529,7 @@ describe("Fetch Api Entity Factory", () => {
     });
 
     test("should not call onRejected for successful responses", async () => {
-      const responseMiddleware: IMiddleware<FetchApiClientResponse<any>> = {
+      const responseMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: vi.fn(res => res),
         onRejected: vi.fn(res => res)
       };
@@ -544,7 +544,7 @@ describe("Fetch Api Entity Factory", () => {
     });
 
     test("should not call any response middleware handlers when response is not ok", async () => {
-      const responseMiddleware: IMiddleware<FetchApiClientResponse<any>> = {
+      const responseMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: vi.fn(res => res),
         onRejected: vi.fn(res => res)
       };
@@ -571,14 +571,14 @@ describe("Fetch Api Entity Factory", () => {
     test("should chain multiple response middlewares", async () => {
       const callOrder: string[] = [];
 
-      const first: IMiddleware<FetchApiClientResponse<any>> = {
+      const first: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: res => {
           callOrder.push("first");
           return res;
         }
       };
 
-      const second: IMiddleware<FetchApiClientResponse<any>> = {
+      const second: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: res => {
           callOrder.push("second");
           return res;
@@ -594,7 +594,7 @@ describe("Fetch Api Entity Factory", () => {
     });
 
     test("should skip response middleware without handlers", async () => {
-      const noOpMiddleware: IMiddleware<FetchApiClientResponse<any>> = {};
+      const noOpMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {};
 
       const factory = createFactory({ respond: [noOpMiddleware] });
       factory.mockClient.mockResolvedValue(createMockResponse({ data: "ok" }));
@@ -617,9 +617,9 @@ describe("Fetch Api Entity Factory", () => {
       };
 
       const responseFulfilledSpy = vi.fn(
-        (res: FetchApiClientResponse<any>) => res
+        (res: FetchApiClientResponse<unknown>) => res
       );
-      const responseMiddleware: IMiddleware<FetchApiClientResponse<any>> = {
+      const responseMiddleware: IMiddleware<FetchApiClientResponse<unknown>> = {
         onFulfilled: responseFulfilledSpy
       };
 
