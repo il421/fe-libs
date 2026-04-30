@@ -1,9 +1,18 @@
 import { ILogger } from "./logger";
-
 import { IMiddleware } from "./middleware";
 
 export type FetchApiClientEntityConfig = Omit<RequestInit, "method" | "body">;
 export type WithParams<T> = T & { params?: Record<string, unknown> };
+
+export interface IFetchApiClientBase<
+  ApiSchema = Record<string, IFetchApiClientEntity>
+> {
+  createInstance: (
+    key: keyof FetchApiEndpointsConfig,
+    config: FetchApiClientConfig
+  ) => IFetchApiClientEntity;
+  initialize(): ApiSchema;
+}
 
 export interface IFetchApiClientEntity {
   post: <T>(
@@ -36,12 +45,8 @@ export type FetchApiClientConfig = {
   overrideMiddlewares?: FetchApiClientHelperMiddlewares;
 };
 
-export type IApi = {
-  [key: string]: IFetchApiClientEntity;
-};
-
-export type FetchApiEndpointsConfig<K = unknown> = {
-  [key in K as string]: FetchApiClientConfig;
+export type FetchApiEndpointsConfig<K extends string = string> = {
+  [key in K]: FetchApiClientConfig;
 };
 
 export interface FetchApiClientHelperMiddlewares {
@@ -54,6 +59,8 @@ export interface FetchApiClientHelperOptions {
   noAuthHeader?: string;
   traceId?: string;
   logger?: ILogger;
+  authHeader?: string;
+  tokenSchema?: string;
 }
 
 export type FetchApiClientRequest = Pick<RequestInit, "method" | "headers"> & {

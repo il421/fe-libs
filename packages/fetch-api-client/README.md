@@ -95,14 +95,8 @@ Define your API schema and create a client instance:
 
 ```typescript
 import { FetchApiClient } from '@fe-libs/fetch-api-client';
-import type { IFetchApiClientEntity } from '@fe-libs/fetch-api-client';
 
-interface ApiSchema {
-  users: IFetchApiClientEntity;
-  products: IFetchApiClientEntity;
-}
-
-const client = new FetchApiClient<ApiSchema>(
+const client = new FetchApiClient(
   {
     users: { baseURL: 'https://api.example.com/users' },
     products: { baseURL: 'https://api.example.com/products' },
@@ -209,7 +203,7 @@ The main class. Extends `FetchApiClientBase` and automatically wires
 #### Constructor
 
 ```typescript
-new FetchApiClient<ApiSchema>(
+new FetchApiClient(
   endpoints: FetchApiEndpointsConfig,
   middlewares?: FetchApiClientHelperMiddlewares,
   options?: FetchApiClientHelperOptions
@@ -225,11 +219,8 @@ new FetchApiClient<ApiSchema>(
 #### `endpoints: FetchApiEndpointsConfig`
 
 ```typescript
-type FetchApiEndpointsConfig = {
-  [key: string]: {
-    baseURL: string;
-    overrideMiddlewares?: FetchApiClientHelperMiddlewares;
-  };
+export type FetchApiEndpointsConfig<K extends string = string> = {
+  [key in K]: FetchApiClientConfig;
 };
 ```
 
@@ -253,27 +244,31 @@ automatically — you cannot remove them via this constructor.
 #### `options: FetchApiClientHelperOptions`
 
 ```typescript
-interface FetchApiClientHelperOptions {
-  getAccessToken: () => Promise<string | undefined>; // required
+export interface FetchApiClientHelperOptions {
+  getAccessToken: () => Promise<string | undefined>;
   noAuthHeader?: string;
   traceId?: string;
   logger?: ILogger;
+  authHeader?: string;
+  tokenSchema?: string;
 }
 ```
 
-| Option | Description |
-|--------|-------------|
-| `getAccessToken` | Async function called on every request. Return `undefined` to skip the `Authorization` header. |
-| `noAuthHeader` | A sentinel header name. If present on a request, the `Authorization` header is **not** injected and the sentinel header is stripped. Useful for public endpoints. |
-| `traceId` | Included in all thrown `FetchApiError` instances for distributed tracing. |
-| `logger` | Custom logger implementing `ILogger`. Defaults to the built-in `Logger`. |
+| Option | Description                                                                                                                                            |
+|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `getAccessToken` | Async function called on every request. Return `undefined` to skip the auth header.                                                                    |
+| `noAuthHeader` | A sentinel header name. If present on a request, the auth header is **not** injected and the sentinel header is stripped. Useful for public endpoints. |
+| `traceId` | Included in all thrown `FetchApiError` instances for distributed tracing.                                                                              |
+| `logger` | Custom logger implementing `ILogger`. Defaults to the built-in `Logger`.                                                                               |
+| `authHeader` | Auth header ovewrride. Defaults to the built-in `Authorization`.                                                                                       |
+| `tokenSchema` | Token schema. Defaults to the built-in `Bearer`.                                                                                                       |
 
 #### `initialize(): ApiSchema`
 
 Builds and returns the typed API object. Call once and export the result.
 
 ```typescript
-const api = new FetchApiClient<ApiSchema>(endpoints, middlewares, options).initialize();
+const api = new FetchApiClient(endpoints, middlewares, options).initialize();
 // api.users.get(...)  api.products.post(...)
 ```
 
@@ -334,7 +329,7 @@ Calls `getAccessToken()` on every request and injects `Authorization: Bearer <to
 **Opt out for specific requests** using `noAuthHeader`:
 
 ```typescript
-const client = new FetchApiClient<ApiSchema>(endpoints, undefined, {
+const client = new FetchApiClient(endpoints, undefined, {
   getAccessToken: async () => getToken(),
   noAuthHeader: 'x-no-auth',
 });
@@ -382,7 +377,7 @@ export class ErrorLogMiddleware implements IMiddleware<FetchApiClientResponse<an
   };
 }
 
-const client = new FetchApiClient<ApiSchema>(
+const client = new FetchApiClient(
   endpoints,
   {
     request: [new CorrelationIdMiddleware()],
@@ -398,7 +393,7 @@ Use `overrideMiddlewares` to append extra middlewares for a single endpoint
 without affecting others:
 
 ```typescript
-const client = new FetchApiClient<ApiSchema>(
+const client = new FetchApiClient(
   {
     public: { baseURL: 'https://api.example.com/public' },
     admin: {
@@ -528,7 +523,7 @@ import { FetchApiClientBase } from '@fe-libs/fetch-api-client';
 import { ExceptionFilterMiddleware } from './middleware/exception-filter.middleware';
 
 // Use FetchApiClientBase directly to skip the auto-wired DefaultExceptionFilterMiddleware
-const client = new FetchApiClientBase<ApiSchema>(endpoints, {
+const client = new FetchApiClientBase(endpoints, {
   respond: [new ExceptionFilterMiddleware(traceId)],
 });
 
@@ -574,7 +569,7 @@ const logger: ILogger = {
   error: (msg, error, ...args) => myLogger.error(msg, error, ...args),
 };
 
-const client = new FetchApiClient<ApiSchema>(endpoints, undefined, {
+const client = new FetchApiClient(endpoints, undefined, {
   getAccessToken,
   logger,
 });
@@ -662,7 +657,7 @@ interface ApiSchema {
   products: IFetchApiClientEntity;
 }
 
-const apiClient = new FetchApiClient<ApiSchema>(
+const apiClient = new FetchApiClient(
   {
     users: { baseURL: 'https://api.example.com/users' },
     products: { baseURL: 'https://api.example.com/products' },
@@ -808,7 +803,7 @@ export const ApiKey: InjectionKey<AppApi> = Symbol('api');
 
 export const apiPlugin = {
   install(app: App) {
-    const raw = new FetchApiClient<ApiSchema>(
+    const raw = new FetchApiClient(
       {
         users: { baseURL: 'https://api.example.com/users' },
         products: { baseURL: 'https://api.example.com/products' },

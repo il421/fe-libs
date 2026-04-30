@@ -2,8 +2,7 @@ import { FetchApiClientBase } from "./fetch-api-client.base";
 import {
   FetchApiEndpointsConfig,
   FetchApiClientHelperMiddlewares,
-  FetchApiClientHelperOptions,
-  IApi
+  FetchApiClientHelperOptions
 } from "./fetch-api-helper.types";
 import {
   AuthorizationMiddleware,
@@ -11,18 +10,15 @@ import {
 } from "./middleware";
 
 export class FetchApiClient<
-  ApiSchema = IApi
-> extends FetchApiClientBase<ApiSchema> {
+  Keys extends string = string
+> extends FetchApiClientBase<Keys> {
   constructor(
-    endpoints: FetchApiEndpointsConfig,
+    endpoints: FetchApiEndpointsConfig<Keys>,
     middlewares?: FetchApiClientHelperMiddlewares,
     options?: FetchApiClientHelperOptions
   ) {
     const request = [
-      new AuthorizationMiddleware(
-        options?.getAccessToken,
-        options?.noAuthHeader
-      ),
+      new AuthorizationMiddleware(options),
       ...(middlewares?.request ?? [])
     ];
 
@@ -30,6 +26,10 @@ export class FetchApiClient<
       new DefaultExceptionFilterMiddleware(options?.traceId),
       ...(middlewares?.respond ?? [])
     ];
-    super(endpoints, { respond, request }, options?.logger);
+    super(
+      endpoints as unknown as FetchApiEndpointsConfig<Keys>,
+      { respond, request },
+      options?.logger
+    );
   }
 }

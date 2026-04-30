@@ -1,34 +1,40 @@
-import { ILogger, Logger } from "../logger";
-
-import { FetchApiClientRequest } from "../fetch-api-helper.types";
+import {
+  FetchApiClientHelperOptions,
+  FetchApiClientRequest
+} from "../fetch-api-helper.types";
 import { IMiddleware } from "./middleware.inteface";
+import {
+  AUTH_HEADER,
+  DEFAULT_TOKEN_SCHEMA
+} from "../fetch-api-client.constants";
 
 export class AuthorizationMiddleware implements IMiddleware<FetchApiClientRequest> {
-  constructor(
-    private getAccessToken?: () => Promise<string | undefined>,
-    private noAuthHeader?: string,
-    private readonly logger: ILogger = new Logger(),
-    private readonly tokenSchema = "Bearer"
-  ) {
-    this.logger.info("AuthorizationMiddleware initialized.");
+  constructor(private options?: FetchApiClientHelperOptions) {
+    this.options?.logger?.info("AuthorizationMiddleware initialized.");
   }
 
   onFulfilled = async (
     config: FetchApiClientRequest
   ): Promise<FetchApiClientRequest> => {
-    const headers = (config.headers ?? {}) as Record<string, string>;
+    const {
+      getAccessToken,
+      noAuthHeader,
+      authHeader = AUTH_HEADER,
+      tokenSchema = DEFAULT_TOKEN_SCHEMA
+    } = this.options ?? {};
 
-    if (this.noAuthHeader && this.noAuthHeader in headers) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [this.noAuthHeader]: _, ...rest } = headers;
-      return { ...config, headers: rest };
+    const headers = new Headers(config.headers);
+    if (noAuthHeader && headers.has(noAuthHeader)) {
+      headers.delete(noAuthHeader);
+      return { ...config, headers };
     }
 
-    const token = await this.getAccessToken?.();
+    const token = await getAccessToken?.();
     if (token) {
+      headers?.append(authHeader, `${tokenSchema} ${token}`);
       return {
         ...config,
-        headers: { ...headers, Authorization: `${this.tokenSchema} ${token}` }
+        headers
       };
     }
 
