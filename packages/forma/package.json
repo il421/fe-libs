@@ -1,0 +1,62 @@
+{
+  "name": "@fe-libs/forma",
+  "version": "0.0.1",
+  "author": "Ilya Suglobov",
+  "type": "module",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.esm.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "description": "A React form state management library providing hooks and components for field-level state tracking, validation, submission, and field arrays — powered by reducers and React Context.",
+  "keywords": [
+    "form",
+    "react form",
+    "forms",
+    "typescript"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/il421/fe-libs.git",
+    "directory": "packages/forma"
+  },
+  "homepage": "https://github.com/il421/fe-libs/tree/main/packages/forma#readme",
+  "bugs": {
+    "url": "https://github.com/il421/fe-libs/issues"
+  },
+  "scripts": {
+    "forma:build": "nx run @fe-libs/forma:build",
+    "forma:publish": "nx run @fe-libs/forma:nx-release-publish"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "flat": "6.0.1",
+    "lodash.clonedeep": "4.5.0",
+    "lodash.isequal": "4.5.0",
+    "lodash.get": "4.4.2",
+    "lodash.set": "4.3.2"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "4.5.9",
+    "@types/lodash.get": "4.4.9",
+    "@types/lodash.set": "4.3.9",
+    "@types/lodash.isequal": "4.5.8",
+    "@types/react": "^18.3.18",
+    "@testing-library/react": "16.2.0"
+  }
+}
