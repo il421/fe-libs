@@ -66,8 +66,9 @@
   ],
   "analytics": false,
   "release": {
-    "projects": ["@fe-libs/fetch-api-client"],
-    "releaseTagPattern": "@fe-libs/fetch-api-client@{version}",
+    "projects": ["@fe-libs/fetch-api-client", "@fe-libs/forma"],
+    "projectsRelationship": "independent",
+    "releaseTagPattern": "{projectName}@{version}",
     "version": {
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true
