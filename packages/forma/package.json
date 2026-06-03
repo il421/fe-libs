@@ -54,22 +54,19 @@
     "forma:publish": "nx run @fe-libs/forma:nx-release-publish"
   },
   "dependencies": {
-    "react": "18.3.1",
     "flat": "6.0.1",
     "lodash.clonedeep": "4.5.0",
-    "lodash.isequal": "4.5.0",
     "lodash.get": "4.4.2",
+    "lodash.isequal": "4.5.0",
     "lodash.set": "4.3.2"
   },
-  "peerDependencies": {
-    "react": ">=18"
-  },
   "devDependencies": {
+    "@testing-library/react": "16.2.0",
     "@types/lodash.clonedeep": "4.5.9",
     "@types/lodash.get": "4.4.9",
-    "@types/lodash.set": "4.3.9",
     "@types/lodash.isequal": "4.5.8",
+    "@types/lodash.set": "4.3.9",
     "@types/react": "^18.3.18",
-    "@testing-library/react": "16.2.0"
+    "react": "^18.3.1"
   }
 }
