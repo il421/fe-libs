@@ -36,6 +36,19 @@
   "bugs": {
     "url": "https://github.com/il421/fe-libs/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "nx": {
+    "targets": {
+      "nx-release-publish": {
+        "executor": "@nx/js:release-publish",
+        "options": {
+          "packageRoot": "packages/forma"
+        }
+      }
+    }
+  },
   "scripts": {
     "forma:build": "nx run @fe-libs/forma:build",
     "forma:publish": "nx run @fe-libs/forma:nx-release-publish"
