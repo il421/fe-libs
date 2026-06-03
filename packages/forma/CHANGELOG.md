@@ -1,3 +1,14 @@
+## 0.1.2 (2026-06-03)
+
+### 🩹 Fixes
+
+- update eslint configuration to ignore react-dom in dependency checks ([82fb62b](https://github.com/il421/fe-libs/commit/82fb62b))
+- update package.json and rollup.config.cjs to include react and react-dom as peer dependencies ([e3ba165](https://github.com/il421/fe-libs/commit/e3ba165))
+
+### ❤️ Thank You
+
+- il421 @il421
+
 ## 0.1.1 (2026-06-03)
 
 ### 🩹 Fixes
