@@ -170,7 +170,7 @@ The root component. Initialises the reducer-backed form state and provides it to
 | `initialValues` | `FormValues` | no | Starting values for all fields. Defaults to `{}`. |
 | `validate` | `(values: FormValues) => object` | no | Synchronous validation function. Return an object whose keys are field names and values are error strings. Nested objects and arrays are supported and are flattened internally. |
 | `notify` | `(args: NotifyArgs) => void` | no | Called whenever a field value changes. Receives the changed field name, its new value, a `getState` snapshot, and `setValue`/`reset` actions. |
-| `isEqual` | `(prevValue: Value, value: Value) => boolean` | no | Custom equality function used by the reducer to decide whether a `setValue` call actually changed the value. Defaults to deep equality via `lodash.isequal`. |
+| `isEqual` | `(prevValue: Value, value: Value) => boolean` | no | Custom equality function used by the reducer to decide whether a `setValue` call actually changed the value. Defaults to built-in deep equality. |
 | `disabled` | `boolean` | no | Propagated to all `useFieldContext` consumers as `disabledForm`. |
 | `readonly` | `boolean` | no | Propagated to all `useFieldContext` consumers as `readonlyForm`. |
 
