@@ -1,6 +1,4 @@
-import clonedeep from "lodash.clonedeep";
-import set from "lodash.set";
-import get from "lodash.get";
+import { cloneDeep, getByPath, setByPath } from "../native-utils";
 
 import {
   defaultFieldState,
@@ -87,7 +85,7 @@ export const formaReducer = <
           } else {
             // has been registered before
             if (!state.fields[name].registered) {
-              const fields = set(clonedeep(state.fields), action.payload.name, {
+              const fields = setByPath(cloneDeep(state.fields), action.payload.name, {
                 ...state.fields[name],
                 registered: true
               });
@@ -103,7 +101,7 @@ export const formaReducer = <
         } else {
           // unregister an existing field
           if (state.fields[name]) {
-            const fields = set(clonedeep(state.fields), action.payload.name, {
+            const fields = setByPath(cloneDeep(state.fields), action.payload.name, {
               ...state.fields[name],
               registered: false
             });
@@ -125,11 +123,11 @@ export const formaReducer = <
           value: action.payload.value as FormValues[keyof FormValues],
           dirty: isEqual
             ? !isEqual(
-                get(state.initialValues, action.payload.name),
+                getByPath(state.initialValues, action.payload.name),
                 action.payload.value
               )
             : !isFieldEqual(
-                get(state.initialValues, action.payload.name),
+                getByPath(state.initialValues, action.payload.name),
                 action.payload.value
               )
         });
@@ -143,10 +141,10 @@ export const formaReducer = <
             name,
             value,
             dirty: isEqual
-              ? !isEqual(get(state.initialValues, name), value)
-              : !isFieldEqual(get(state.initialValues, name), value)
+              ? !isEqual(getByPath(state.initialValues, name), value)
+              : !isFieldEqual(getByPath(state.initialValues, name), value)
           });
-        }, clonedeep(state));
+        }, cloneDeep(state));
       }
 
       case BaseActions.set_active: {

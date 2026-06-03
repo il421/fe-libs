@@ -1,7 +1,4 @@
-import { flatten } from "flat";
-import clonedeep from "lodash.clonedeep";
-import isequal from "lodash.isequal";
-import set from "lodash.set";
+import { cloneDeep, flattenObject, isDeepEqual, setByPath } from "./native-utils";
 
 import { FieldItemBaseState, FormaState } from "./forma-api.types";
 import { SetValuePayload } from "./reducers";
@@ -93,7 +90,7 @@ export const isFieldEqual = <
 
   // Deep comparison for plain objects
   if (typeof prevValue === "object" && typeof value === "object") {
-    return isequal(prevValue, value);
+    return isDeepEqual(prevValue, value);
   }
 
   return prevValue === value;
@@ -106,9 +103,9 @@ export const getSetValueState = <
   state: FormaState<FormValues, TError>,
   payload: SetValuePayload<FormValues[keyof FormValues]>
 ): FormaState<FormValues, TError> => {
-  const values = set(clonedeep(state.values), payload.name, payload.value);
+  const values = setByPath(cloneDeep(state.values), payload.name, payload.value);
 
-  const fields = clonedeep(state.fields);
+  const fields = cloneDeep(state.fields);
 
   fields[payload.name] = updateField(state, payload);
 
@@ -125,7 +122,7 @@ export const flatResultValidationResult =
   <FormValues>(validate: (values: FormValues) => object) =>
   (formValues: FormValues) => {
     //flatten nested objects/arrays to path keys
-    const flatErrors = flatten(validate(formValues)) as Record<string, string>;
+    const flatErrors = flattenObject(validate(formValues)) as Record<string, string>;
 
     //replace .0. array indexes with [0].
     const flatResultWithKeysMapped: Record<string, string> = {};

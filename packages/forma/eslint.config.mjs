@@ -8,7 +8,7 @@ export default [
       "@nx/dependency-checks": [
         "error",
         {
-          ignoredDependencies: ["react"],
+          ignoredDependencies: ["react", "react-dom"],
           ignoredFiles: [
             "{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}",
             "{projectRoot}/rollup.config.{js,ts,mjs,mts,cjs,cts}",
