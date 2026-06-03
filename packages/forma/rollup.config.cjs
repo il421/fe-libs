@@ -9,8 +9,6 @@ module.exports = withNx(
     format: ["esm", "cjs"]
   },
   {
-    // Provide additional rollup configuration here. See: https://rollupjs.org/configuration-options
-    // e.g.
-    // output: { sourcemap: true },
+    external: ["react", "react-dom", "react/jsx-runtime"],
   }
 );
