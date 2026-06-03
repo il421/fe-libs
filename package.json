@@ -5,7 +5,9 @@
   "scripts": {},
   "private": true,
   "author": "Ilya Suglobov",
-  "dependencies": {},
+  "dependencies": {
+    "react": "^18.3.1"
+  },
   "devDependencies": {
     "@eslint/js": "9.8.0",
     "@nx/eslint": "22.6.5",
@@ -20,6 +22,7 @@
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
     "@types/node": "20.19.9",
+    "@types/react": "^18.3.18",
     "@vitest/coverage-v8": "4.1.0",
     "@vitest/ui": "4.1.0",
     "ajv": "8.0.0",
