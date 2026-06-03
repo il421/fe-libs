@@ -1,6 +1,6 @@
 import { UseFieldContextReturn } from "../forma-api.types";
 import { useFormaContext } from "./useFormaContext";
-import get from "lodash.get";
+import { getByPath } from "../native-utils";
 
 export const useFieldContext = <
   Value = unknown,
@@ -16,13 +16,13 @@ export const useFieldContext = <
   const setFieldValue = (value: Value) =>
     setValue(name, value as FormValues[keyof FormValues]);
 
-  const resetFieldValue = () => setValue(name, get(initialValues, name));
+  const resetFieldValue = () => setValue(name, getByPath(initialValues, name));
 
   const focusField = () => focus(name);
   const blurField = () => blur(name);
 
   const meta = fields[name];
-  const value = get(values, name) as Value;
+  const value = getByPath(values, name) as Value;
 
   return {
     setFieldValue,

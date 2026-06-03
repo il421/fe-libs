@@ -1,6 +1,6 @@
 import { FormaState, ProviderProps } from "../forma-api.types";
 import { getSetValueState, isFieldEqual } from "../forma-api.utils";
-import get from "lodash.get";
+import { getByPath } from "../native-utils";
 import {
   ArraysMutatorsActions,
   SetArrayAction
@@ -15,7 +15,7 @@ export const formaArraysReducer = <
   callBacks: Pick<ProviderProps<FormValues, TError>, "isEqual">
 ): FormaState<FormValues, TError> => {
   const { isEqual } = callBacks;
-  const prevValues: [] = get(state.values, action.payload.name) ?? [];
+  const prevValues: [] = (getByPath(state.values, action.payload.name) as []) ?? [];
   let tempValue;
   switch (action.payload.type) {
     case ArraysMutatorsActions.push_item:
@@ -59,7 +59,7 @@ export const formaArraysReducer = <
       tempValue = action.payload.value;
   }
 
-  const initValue = get(state.initialValues, action.payload.name);
+  const initValue = getByPath(state.initialValues, action.payload.name);
   const dirty = isEqual
     ? !isEqual(initValue, tempValue)
     : !isFieldEqual(initValue, tempValue);
