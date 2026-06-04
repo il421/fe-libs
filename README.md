@@ -21,31 +21,20 @@ A lightweight HTTP client built on the native Fetch API with composable middlewa
 
 [View documentation →](./packages/fetch-api-client/README.md)
 
-## Getting Started
+### [@fe-libs/forma](./packages/forma)
 
-Each package is independently versioned and can be installed separately:
+A React form state management library providing hooks and components for field-level state tracking, validation, submission, and field arrays — powered by reducers and React Context.
 
-```bash
-npm install @fe-libs/fetch-api-client
-```
+**Key features:**
+- 🔁 Reducer-backed state
+- 🎯 Field-level granularity
+- 🧩 Render-prop API
+- 📋 Built-in field arrays
+- 🔍 Subscription model
+- 🏗️ Zero UI coupling
+- 🔷 TypeScript-first
 
-## Development
-
-This is an Nx monorepo. Common commands:
-
-```bash
-# Install dependencies
-npm install
-
-# Build all packages
-nx run-many --target=build
-
-# Run tests
-nx run-many --target=test
-
-# Build specific package
-nx run @fe-libs/fetch-api-client:build
-```
+[View documentation →](./packages/forma/README.md)
 
 ## License
 
